@@ -1,0 +1,5 @@
+.bsp
+.idea
+.dotty*
+days/*/src/main/resources/input?.txt
+**/target
