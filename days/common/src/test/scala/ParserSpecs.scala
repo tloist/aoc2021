@@ -1,4 +1,4 @@
-import cats.parse.{Parser, Parser1}
+import cats.parse.Parser
 import munit.Assertions._
 
 object ParserSpecs {

@@ -5,5 +5,5 @@ object Dependencies {
   val catsParse = "org.typelevel" %% "cats-parse" % "0.3.6"
   val betterFiles = "com.github.pathikrit" % "better-files_2.13" % "3.9.1"
   val guava = "com.google.guava" % "guava" % "31.0.1"
-  val scalatest = "org.scalatest" %% "scalatest" % "3.2.10"
+  val mUnit = "org.scalameta" %% "munit" % "0.7.29"
 }

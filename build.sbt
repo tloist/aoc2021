@@ -1,9 +1,21 @@
 import Dependencies._
 val scala3Version = "3.1.0"
+scalacOptions ++= (
+  Seq(
+    "-encoding", "UTF-8",
+    "-source", "future"
+  )
+)
 
 name := "Advent of Code 2021"
 
 lazy val day01 = dayProject(1, "Sonar Sweep")
+lazy val day02 = dayProject(2, "Dive")
+  .settings(
+    libraryDependencies ++= Seq(
+      catsParse
+    )
+  )
 
 
 lazy val common = project
@@ -14,7 +26,8 @@ lazy val common = project
     scalaVersion := scala3Version,
     libraryDependencies ++= Seq(
       betterFiles,
-      catsParse
+      catsParse,
+      mUnit % "test"
     )
   )
 
@@ -25,7 +38,7 @@ def dayProject(day: Int, title: String = "") = Project.apply(f"day_$day%02d", fi
     scalaVersion := scala3Version,
     libraryDependencies ++= Seq(
       cats,
-      scalatest % "test"
+      mUnit % "test"
     )
   )
   .dependsOn(common % "compile->compile;test->test")
