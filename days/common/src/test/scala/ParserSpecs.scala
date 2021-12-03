@@ -7,8 +7,9 @@ object ParserSpecs {
     parser.parseAll(input) match {
       case Right(result) => spec(result)
       case Left(Parser.Error(offset, expectations)) =>
+        val failedInput = if (offset > 0) { s"""'${input.charAt(offset - 1)}'""" } else { "The very first character" }
         fail(s"""|Parsing of input '$input' failed at position: $offset!
-                 |Input that failed: '${input.charAt(offset - 1)}'.
+                 |Input that failed: $failedInput.
                  |Expected: $expectations}
                  |""".stripMargin
         )

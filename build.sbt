@@ -10,12 +10,8 @@ scalacOptions ++= (
 name := "Advent of Code 2021"
 
 lazy val day01 = dayProject(1, "Sonar Sweep")
-lazy val day02 = dayProject(2, "Dive")
-  .settings(
-    libraryDependencies ++= Seq(
-      catsParse
-    )
-  )
+lazy val day02 = dayProject(2, "Dive", Seq(catsParse))
+lazy val day03 = dayProject(3, "Binary Diagnostic", Seq(catsParse))
 
 
 lazy val common = project
@@ -31,7 +27,7 @@ lazy val common = project
     )
   )
 
-def dayProject(day: Int, title: String = "") = Project.apply(f"day_$day%02d", file(f"days/$day%02d"))
+def dayProject(day: Int, title: String = ""): Project = Project.apply(f"day_$day%02d", file(f"days/$day%02d"))
   .settings(
     name := f"AoC Day $day%2d" + (if (title.nonEmpty) s" - $title" else ""),
     version := "0.1.0",
@@ -42,3 +38,8 @@ def dayProject(day: Int, title: String = "") = Project.apply(f"day_$day%02d", fi
     )
   )
   .dependsOn(common % "compile->compile;test->test")
+
+def dayProject(day: Int, title: String, additionalDependencies: Seq[ModuleID]): Project  =
+  dayProject(day, title).settings(
+    libraryDependencies ++= additionalDependencies
+  )
