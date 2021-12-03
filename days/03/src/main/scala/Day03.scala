@@ -2,8 +2,9 @@ import cats._
 import cats.data._
 import cats.implicits._
 import cats.parse.{Parser0, Parser => P, Numbers}
-import scala.collection.BitSet
-import scala.languageFeature.higherKinds
+import scala.collection.immutable.BitSet
+import Rating.*
+import cats.data.NonEmptyCollection
 
 object BitSetParser {
   // Scala BitSet store the binary positions of bits that are true
@@ -39,7 +40,12 @@ extension (set: BitSet)
 
   def reverse(totalLength: Int): BitSet = BitSet.fromSpecific((0 to totalLength).toSet diff set)
 
+enum Rating:
+  case OxygenGenerator
+  case CO2Scrubber
+
 extension (sets: NonEmptyList[BitSet])
+  def highestBitPos: Int = sets.map(_.max).maximum 
 
   def gammaRate: BitSet = {
     val truePositionCount = sets.foldLeft(Map.empty[Int, Int]) { (counts, set) =>
@@ -54,10 +60,32 @@ extension (sets: NonEmptyList[BitSet])
     BitSet.fromSpecific(mostCommonBits)
   }
 
-  def epsilonRate: BitSet = gammaRate.reverse(sets.map(_.max).maximum)
+  def epsilonRate: BitSet = gammaRate.reverse(sets.highestBitPos)
 
   def gammaMultEpsilon: BigInt = gammaRate.toDecimal * epsilonRate.toDecimal
 
+// These algorithms are not guaranteed to run a NonEmptyList
+// e.g. if all BitSets have a bit set on position x and we search the C02 Scrubber, we remove all entries?!
+extension (sets: List[BitSet])
+  def highestBitPos: Int = sets.map(_.max).max 
+
+  def unifyOnPosition(pos: Int, rating: Rating): List[BitSet] = 
+    if (sets.size == 1) sets
+    else {
+      val oneCount = sets.count(_.contains(pos))
+      val zeroCount = sets.size - oneCount
+      val seekingBit = rating match {
+        case OxygenGenerator => oneCount >= zeroCount
+        case CO2Scrubber => oneCount < zeroCount
+      }
+      if (seekingBit) { sets.filter(_.contains(pos)) }
+      else { sets.filter(!_.contains(pos)) }
+    }
+
+  def computeRating(rating: Rating): BitSet = {
+    val result = (highestBitPos to 0 by -1).foldLeft(sets) { (remaining, pos) => remaining.unifyOnPosition(pos, rating) }
+    result.head // if there are multiple, these should be identical - dedup here
+  }
 
 @main def part1(): Unit = {
   val bitSets = BitSetParser.parse(Input.asString())
@@ -66,4 +94,11 @@ extension (sets: NonEmptyList[BitSet])
   println(s"Final result: ${bitSets.gammaMultEpsilon}")
 }
 
-@main def part2(): Unit = ???
+@main def part2(): Unit = {
+  val bitSets = BitSetParser.parse(Input.asString()).toList
+  val oxyRating = bitSets.computeRating(OxygenGenerator)
+  val co2Rating = bitSets.computeRating(CO2Scrubber)
+  println(s"OxyRating:   ${oxyRating.toBinaryStringPaddedTo(12)} -- ${oxyRating.toDecimal}")
+  println(s"CO2 Rating: ${co2Rating.toBinaryStringPaddedTo(12)} -- ${co2Rating.toDecimal}")
+  println(s"Final result: ${oxyRating.toDecimal * co2Rating.toDecimal}")
+}
