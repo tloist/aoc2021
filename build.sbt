@@ -12,7 +12,8 @@ name := "Advent of Code 2021"
 lazy val day01 = dayProject(1, "Sonar Sweep")
 lazy val day02 = dayProject(2, "Dive", Seq(catsParse))
 lazy val day03 = dayProject(3, "Binary Diagnostic", Seq(catsParse))
-lazy val day04r = dayProject(4, "Giant Squid", Seq(catsParse))
+lazy val day04 = dayProject(4, "Giant Squid", Seq(catsParse))
+lazy val day05 = dayProject(5, "Hydrothermal Venture", Seq(catsParse))
 
 
 lazy val common = project
