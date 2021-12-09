@@ -16,6 +16,7 @@ lazy val day04 = dayProject(4, "Giant Squid", Seq(catsParse))
 lazy val day05 = dayProject(5, "Hydrothermal Venture", Seq(catsParse))
 lazy val day06 = dayProject(6, "Lanternfish", Seq(catsParse))
 lazy val day07 = dayProject(7, "The Treachery of Whales", Seq(catsParse))
+lazy val day08 = dayProject(8, "Seven Segment Search", Seq(catsParse))
 
 
 lazy val common = project
