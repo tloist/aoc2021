@@ -22,6 +22,7 @@ lazy val day10 = dayProject(10, "Syntax Scoring", Seq(catsParse))
 lazy val day11 = dayProject(11, "Dumbo Octopus")
 lazy val day12 = dayProject(12, "Passage Pathing", Seq(catsParse))
 lazy val day13 = dayProject(13, "Transparent Origami", Seq(catsParse))
+lazy val day14 = dayProject(14, "Extended Polymerization", Seq(catsParse))
 
 lazy val common = project
   .in(file("days/common"))
